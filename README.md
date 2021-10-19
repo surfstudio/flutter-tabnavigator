@@ -9,12 +9,12 @@
 
 This package made by [Surf](https://surf.ru).
 
-## About
+## Description
 
 Possibly the most common style of navigation in mobile apps is tab-based navigation.
 This module can manage the tabs on the screen.
 
-## Usage
+## Example
 
 * Add [TabNavigator](lib/src/tab_navigator.dart) to your widget.
 * Add mapping of tabs to widgets inside the tab via [mappedTabs](lib/src/tab_navigator.dart#L22).
