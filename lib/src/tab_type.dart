@@ -15,15 +15,14 @@
 /// base type for a list of tabs
 /// adding new types of tabs via the [append] method
 abstract class TabType {
-  const TabType(this.value);
+  static const int emptyValue = -1;
+  static final _values = <TabType>[];
 
   final int value;
 
-  static const int emptyValue = -1;
-
-  static final _values = <TabType>[];
-
   static Iterable<TabType> get values => _values;
+
+  const TabType(this.value);
 
   static void append(TabType newTab) {
     _values.add(newTab);

@@ -15,7 +15,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tabnavigator/tabnavigator.dart';
 
 // ignore_for_file: avoid-returning-widgets
@@ -35,6 +34,15 @@ Widget _defaultTransitionBuilder(
 
 /// Implementation of tab navigation
 class TabNavigator extends StatefulWidget {
+  final Map<TabType, TabBuilder> mappedTabs;
+  final Stream<TabType> selectedTabStream;
+  final TabType initialTab;
+  final void Function(BuildContext, TabType)? onActiveTabReopened;
+  final ObserversBuilder? observersBuilder;
+  final RouteTransitionsBuilder transitionsBuilder;
+  final Duration transitionDuration;
+  final RouteFactory? onGenerateRoute;
+
   const TabNavigator({
     required this.mappedTabs,
     required this.selectedTabStream,
@@ -47,14 +55,8 @@ class TabNavigator extends StatefulWidget {
     this.onGenerateRoute,
   }) : super(key: key);
 
-  final Map<TabType, TabBuilder> mappedTabs;
-  final Stream<TabType> selectedTabStream;
-  final TabType initialTab;
-  final void Function(BuildContext, TabType)? onActiveTabReopened;
-  final ObserversBuilder? observersBuilder;
-  final RouteTransitionsBuilder transitionsBuilder;
-  final Duration transitionDuration;
-  final RouteFactory? onGenerateRoute;
+  @override
+  TabNavigatorState createState() => TabNavigatorState();
 
   static TabNavigatorState of(BuildContext context) {
     final type = _typeOf<TabNavigatorState>();
@@ -68,15 +70,12 @@ class TabNavigator extends StatefulWidget {
 
     return tabNavigator;
   }
-
-  @override
-  TabNavigatorState createState() => TabNavigatorState();
 }
 
 class TabNavigatorState extends State<TabNavigator> {
-  final List<TabType> _initializedTabs = [];
   final Map<TabType, GlobalKey<NavigatorState>> mappedNavKeys = {};
   final TabObserver tabObserver = TabObserver();
+  final List<TabType> _initializedTabs = [];
   late ValueNotifier<TabType> _activeTab;
 
   @override

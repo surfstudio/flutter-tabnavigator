@@ -14,7 +14,6 @@
 
 import 'dart:async';
 
-import 'package:tabnavigator/src/tab_state.dart';
 import 'package:tabnavigator/tabnavigator.dart';
 
 class TabObserver {

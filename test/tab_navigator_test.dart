@@ -13,76 +13,77 @@
 // limitations under the License.
 
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tabnavigator/tabnavigator.dart';
 
 void main() {
-  late StreamController<TestTab> _tabController;
+  late StreamController<TestTab> tabController;
 
   setUp(() {
-    _tabController = StreamController<TestTab>.broadcast(sync: true);
+    tabController = StreamController<TestTab>.broadcast(sync: true);
   });
 
   group('TabNavigator', () {
     testWidgets('smoke test', (tester) async {
-      const _initTab = TestTab.first;
+      const initTab = TestTab.first;
 
-      Stream<TestTab> tabStream() => _tabController.stream;
+      Stream<TestTab> tabStream() => tabController.stream;
 
-      final _map = {
-        TestTab.first: () => Container(color: Colors.white),
-        TestTab.second: () => Container(color: Colors.blue),
-        TestTab.third: () => Container(color: Colors.red),
+      final map = {
+        TestTab.first: () => const ColoredBox(color: Colors.white),
+        TestTab.second: () => const ColoredBox(color: Colors.blue),
+        TestTab.third: () => const ColoredBox(color: Colors.red),
       };
 
-      final _widget = MaterialApp(
+      final widget = MaterialApp(
         home: Scaffold(
           body: TabNavigator(
-            initialTab: _initTab,
+            initialTab: initTab,
             selectedTabStream: tabStream(),
-            mappedTabs: _map,
+            mappedTabs: map,
           ),
         ),
       );
 
-      await tester.pumpWidget(_widget);
+      await tester.pumpWidget(widget);
     });
 
     testWidgets('navigation between tabs', (tester) async {
-      const _initTab = TestTab.first;
+      const initTab = TestTab.first;
 
-      const _keys = [
+      const keys = [
         Key('first'),
         Key('second'),
         Key('third'),
       ];
 
-      final _map = {
-        TestTab.first: () => Container(color: Colors.white, key: _keys[0]),
-        TestTab.second: () => Container(color: Colors.blue, key: _keys[1]),
-        TestTab.third: () => Container(color: Colors.red, key: _keys[2]),
+      final map = {
+        TestTab.first: () => ColoredBox(color: Colors.white, key: keys[0]),
+        TestTab.second: () => ColoredBox(color: Colors.blue, key: keys[1]),
+        TestTab.third: () => ColoredBox(color: Colors.red, key: keys[2]),
       };
 
-      Stream<TestTab> tabStream() => _tabController.stream;
+      Stream<TestTab> tabStream() => tabController.stream;
 
-      final _widget = MaterialApp(
+      final widget = MaterialApp(
         home: Scaffold(
           body: TabNavigator(
-            initialTab: _initTab,
+            initialTab: initTab,
             selectedTabStream: tabStream(),
-            mappedTabs: _map,
+            mappedTabs: map,
           ),
         ),
       );
 
-      await tester.pumpWidget(_widget);
+      await tester.pumpWidget(widget);
 
       // current tab is first with white color
       expect(
         find.descendant(
           of: find.byType(TabNavigator),
-          matching: find.byKey(_keys[0]),
+          matching: find.byKey(keys[0]),
         ),
         findsWidgets,
       );
@@ -100,14 +101,14 @@ void main() {
       );
 
       // set current tab to second with blue color
-      _tabController.sink.add(TestTab.second);
+      tabController.sink.add(TestTab.second);
       await tester.pump();
 
       // current tab is second with blue color
       expect(
         find.descendant(
           of: find.byType(TabNavigator),
-          matching: find.byKey(_keys[1]),
+          matching: find.byKey(keys[1]),
         ),
         findsWidgets,
       );
@@ -126,49 +127,49 @@ void main() {
     });
 
     testWidgets('deep navigation', (tester) async {
-      const _initTab = TestTab.first;
+      const initTab = TestTab.first;
 
-      const _keys = [
+      const keys = [
         Key('first'),
         Key('second'),
         Key('third'),
       ];
 
-      final _map = {
+      final map = {
         TestTab.first: () {
           return Builder(builder: (context) {
             return InkWell(
               onTap: () {
                 Navigator.of(context).push<void>(
                   MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      body: Container(
+                    builder: (context) => const Scaffold(
+                      body: ColoredBox(
                         color: Colors.green,
                       ),
                     ),
                   ),
                 );
               },
-              child: Container(color: Colors.white, key: _keys[0]),
+              child: ColoredBox(color: Colors.white, key: keys[0]),
             );
           });
         },
-        TestTab.second: () => Container(color: Colors.blue, key: _keys[1]),
-        TestTab.third: () => Container(color: Colors.red, key: _keys[2]),
+        TestTab.second: () => ColoredBox(color: Colors.blue, key: keys[1]),
+        TestTab.third: () => ColoredBox(color: Colors.red, key: keys[2]),
       };
 
-      Stream<TestTab> tabStream() => _tabController.stream;
+      Stream<TestTab> tabStream() => tabController.stream;
 
-      final _widget = MaterialApp(
+      final widget = MaterialApp(
         home: Scaffold(
           body: TabNavigator(
-            initialTab: _initTab,
+            initialTab: initTab,
             selectedTabStream: tabStream(),
-            mappedTabs: _map,
+            mappedTabs: map,
           ),
           bottomNavigationBar: StreamBuilder<TestTab>(
             stream: tabStream(),
-            initialData: _initTab,
+            initialData: initTab,
             builder: (context, snapshot) {
               return BottomNavigationBar(
                 items: const [
@@ -187,38 +188,38 @@ void main() {
                 ],
                 currentIndex: snapshot.hasData ? snapshot.data!.value : 0,
                 onTap: (value) =>
-                    _tabController.sink.add(TestTab.byValue(value)),
+                    tabController.sink.add(TestTab.byValue(value)),
               );
             },
           ),
         ),
       );
 
-      await tester.pumpWidget(_widget);
+      await tester.pumpWidget(widget);
 
       // current tab is first with white color
       expect(
         find.descendant(
           of: find.byType(TabNavigator),
-          matching: find.byKey(_keys[0]),
+          matching: find.byKey(keys[0]),
         ),
         findsWidgets,
       );
 
       expect(
         find.byWidgetPredicate(
-          (widget) => widget is Container && widget.color == Colors.green,
+          (widget) => widget is ColoredBox && widget.color == Colors.green,
         ),
         findsNothing,
       );
 
-      await tester.tap(find.byKey(_keys[0]));
+      await tester.tap(find.byKey(keys[0]));
       await tester.pumpAndSettle();
 
       // this means that we're at second screen of first tab
       expect(
         find.byWidgetPredicate(
-          (widget) => widget is Container && widget.color == Colors.green,
+          (widget) => widget is ColoredBox && widget.color == Colors.green,
         ),
         findsWidgets,
       );
@@ -230,14 +231,14 @@ void main() {
       expect(
         find.descendant(
           of: find.byType(TabNavigator),
-          matching: find.byKey(_keys[0]),
+          matching: find.byKey(keys[0]),
         ),
         findsNothing,
       );
       expect(
         find.descendant(
           of: find.byType(TabNavigator),
-          matching: find.byKey(_keys[1]),
+          matching: find.byKey(keys[1]),
         ),
         findsWidgets,
       );
@@ -245,16 +246,16 @@ void main() {
   });
 
   tearDown(() async {
-    await _tabController.close();
+    await tabController.close();
   });
 }
 
 class TestTab extends TabType {
-  const TestTab._(int value) : super(value);
-
   static const first = TestTab._(0);
   static const second = TestTab._(1);
   static const third = TestTab._(2);
+
+  const TestTab._(int value) : super(value);
 
   static TestTab byValue(int value) {
     switch (value) {
