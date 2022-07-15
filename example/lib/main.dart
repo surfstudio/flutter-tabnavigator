@@ -49,8 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final _tabController = StreamController<AppTab>.broadcast();
   final _initTab = AppTab.feed;
 
-  Stream<AppTab> get tabStream => _tabController.stream;
-
   final _map = <AppTab, TabBuilder>{
     AppTab.feed: () {
       return ListView.builder(
@@ -127,6 +125,8 @@ class _MyHomePageState extends State<MyHomePage> {
     },
   };
 
+  Stream<AppTab> get tabStream => _tabController.stream;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -170,11 +170,11 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class AppTab extends TabType {
-  const AppTab._(int value) : super(value);
-
   static const feed = AppTab._(0);
   static const colors = AppTab._(1);
   static const info = AppTab._(2);
+
+  const AppTab._(int value) : super(value);
 
   static AppTab byValue(int value) {
     switch (value) {

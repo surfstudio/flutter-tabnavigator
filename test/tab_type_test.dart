@@ -17,25 +17,25 @@ import 'package:tabnavigator/tabnavigator.dart';
 
 void main() {
   test('TabType append', () {
-    final _tabs = [
+    final tabs = [
       TestTab.first,
       TestTab.second,
       TestTab.third,
     ]..forEach(TabType.append);
 
-    expect(TabType.values, equals(_tabs));
+    expect(TabType.values, equals(tabs));
   });
 
   test('TabType byValue', () {
-    final _tabs = [
+    final tabs = [
       TestTab.first,
       TestTab.second,
       TestTab.third,
     ]..forEach(TabType.append);
 
-    expect(TabType.byValue(0), equals(_tabs[0]));
-    expect(TabType.byValue(1), equals(_tabs[1]));
-    expect(TabType.byValue(2), equals(_tabs[2]));
+    expect(TabType.byValue(0), equals(tabs[0]));
+    expect(TabType.byValue(1), equals(tabs[1]));
+    expect(TabType.byValue(2), equals(tabs[2]));
 
     try {
       expect(TabType.byValue(3), throwsException);
@@ -44,11 +44,11 @@ void main() {
 }
 
 class TestTab extends TabType {
-  const TestTab._(int value) : super(value);
-
   static const first = TestTab._(0);
   static const second = TestTab._(1);
   static const third = TestTab._(2);
+
+  const TestTab._(int value) : super(value);
 
   static TestTab byValue(int value) {
     switch (value) {
