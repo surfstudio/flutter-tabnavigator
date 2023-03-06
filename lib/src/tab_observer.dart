@@ -46,7 +46,7 @@ class TabObserver {
   void addTab(TabType tab) {
     _tabControllers.putIfAbsent(
       tab,
-      () => StreamController<TabState>.broadcast(),
+      StreamController<TabState>.broadcast,
     );
   }
 
