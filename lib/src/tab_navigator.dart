@@ -119,7 +119,9 @@ class TabNavigatorState extends State<TabNavigator> {
               controller: MaterialApp.createMaterialHeroController(),
               child: Navigator(
                 key: mappedNavKeys[tabType],
-                observers: widget.observersBuilder != null ? widget.observersBuilder!(tabType) : [],
+                observers: widget.observersBuilder != null
+                    ? widget.observersBuilder!(tabType)
+                    : [],
                 onGenerateRoute: (rs) => rs.name == Navigator.defaultRouteName
                     ? PageRouteBuilder<Object>(
                         settings: const RouteSettings(
@@ -144,7 +146,8 @@ class TabNavigatorState extends State<TabNavigator> {
   }
 
   Future<bool> _willPop(TabType tabType) async {
-    final maybePop = mappedNavKeys[tabType]?.currentState?.maybePop() ?? Future.value(false);
+    final maybePop =
+        mappedNavKeys[tabType]?.currentState?.maybePop() ?? Future.value(false);
 
     return !(await maybePop);
   }
@@ -167,7 +170,8 @@ class TabNavigatorState extends State<TabNavigator> {
           return const SizedBox();
         }
         final tabType = snapshot.data!;
-        if (tabType.value != TabType.emptyValue && !_initializedTabs.contains(tabType)) {
+        if (tabType.value != TabType.emptyValue &&
+            !_initializedTabs.contains(tabType)) {
           _initializedTabs.add(tabType);
           tabObserver.addTab(tabType);
         }
