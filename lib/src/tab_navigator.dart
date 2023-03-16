@@ -34,6 +34,19 @@ Widget _defaultTransitionBuilder(
 
 /// Implementation of tab navigation
 class TabNavigator extends StatefulWidget {
+  static TabNavigatorState of(BuildContext context) {
+    final type = _typeOf<TabNavigatorState>();
+    TabNavigatorState? tabNavigator;
+    tabNavigator = context.findAncestorStateOfType<TabNavigatorState>();
+    if (tabNavigator == null) {
+      throw Exception(
+        'Can not find nearest _TabNavigator of type $type. Do you define it?',
+      );
+    }
+
+    return tabNavigator;
+  }
+
   final Map<TabType, TabBuilder> mappedTabs;
   final Stream<TabType> selectedTabStream;
   final TabType initialTab;
@@ -57,19 +70,6 @@ class TabNavigator extends StatefulWidget {
 
   @override
   TabNavigatorState createState() => TabNavigatorState();
-
-  static TabNavigatorState of(BuildContext context) {
-    final type = _typeOf<TabNavigatorState>();
-    TabNavigatorState? tabNavigator;
-    tabNavigator = context.findAncestorStateOfType<TabNavigatorState>();
-    if (tabNavigator == null) {
-      throw Exception(
-        'Can not find nearest _TabNavigator of type $type. Do you define it?',
-      );
-    }
-
-    return tabNavigator;
-  }
 }
 
 class TabNavigatorState extends State<TabNavigator> {
@@ -99,36 +99,6 @@ class TabNavigatorState extends State<TabNavigator> {
         }
       },
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<TabType>(
-      stream: widget.selectedTabStream,
-      initialData: widget.initialTab,
-      builder: (context, snapshot) {
-        if (snapshot.data == null) {
-          return const SizedBox();
-        }
-        final tabType = snapshot.data!;
-        if (tabType.value != TabType.emptyValue &&
-            !_initializedTabs.contains(tabType)) {
-          _initializedTabs.add(tabType);
-          tabObserver.addTab(tabType);
-        }
-
-        _activeTab.value = tabType;
-        return Stack(children: _buildTabs(tabType));
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    tabObserver.dispose();
-    mappedNavKeys.clear();
-    _activeTab.dispose();
-    super.dispose();
   }
 
   List<Widget> _buildTabs(TabType selectedTab) {
@@ -180,5 +150,35 @@ class TabNavigatorState extends State<TabNavigator> {
         mappedNavKeys[tabType]?.currentState?.maybePop() ?? Future.value(false);
 
     return !(await maybePop);
+  }
+
+  @override
+  void dispose() {
+    tabObserver.dispose();
+    mappedNavKeys.clear();
+    _activeTab.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<TabType>(
+      stream: widget.selectedTabStream,
+      initialData: widget.initialTab,
+      builder: (context, snapshot) {
+        if (snapshot.data == null) {
+          return const SizedBox();
+        }
+        final tabType = snapshot.data!;
+        if (tabType.value != TabType.emptyValue &&
+            !_initializedTabs.contains(tabType)) {
+          _initializedTabs.add(tabType);
+          tabObserver.addTab(tabType);
+        }
+
+        _activeTab.value = tabType;
+        return Stack(children: _buildTabs(tabType));
+      },
+    );
   }
 }
