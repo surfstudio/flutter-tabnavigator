@@ -109,15 +109,15 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Text(
               'TabNavigator',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             Text(
               'example',
-              style: Theme.of(context).textTheme.bodyText2,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             Text(
               'Powered by Surf',
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
         );
