@@ -1,6 +1,6 @@
 # Tab Navigator
 
-[![Build Status](https://shields.io/github/workflow/status/surfstudio/SurfGear/build?logo=github&logoColor=white)](https://github.com/surfstudio/SurfGear/tree/main/packages/tabnavigator)
+[![Build Status](https://shields.io/github/actions/workflow/status/surfstudio/flutter-tabnavigator/build.yaml?logo=github&logoColor=white)](https://github.com/surfstudio/SurfGear/tree/main/packages/tabnavigator)
 [![Coverage Status](https://img.shields.io/codecov/c/github/surfstudio/SurfGear?flag=tabnavigator&logo=codecov&logoColor=white)](https://codecov.io/gh/surfstudio/SurfGear)
 [![Pub Version](https://img.shields.io/pub/v/tabnavigator?logo=dart&logoColor=white)](https://pub.dev/packages/tabnavigator)
 [![Pub Likes](https://badgen.net/pub/likes/tabnavigator)](https://pub.dev/packages/tabnavigator)
